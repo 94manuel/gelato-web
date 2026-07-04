@@ -11,7 +11,7 @@ spec:
   source:
     repoURL: https://github.com/94manuel/gelato.git
     targetRevision: main
-    path: gelato-web/k8s/overlays/prod
+    path: k8s/overlays/prod
   destination:
     server: https://kubernetes.default.svc
     namespace: gelato
