@@ -34,11 +34,9 @@ jobs:
           node-version: 22
 
       - name: Install dependencies
-        working-directory: gelato-web
         run: npm install
 
       - name: Validate Web build
-        working-directory: gelato-web
         run: npm run build
         env:
           NEXT_PUBLIC_API_URL: /api
@@ -57,8 +55,8 @@ jobs:
       - name: Build and push Web image
         uses: docker/build-push-action@v6
         with:
-          context: gelato-web
-          file: gelato-web/Dockerfile
+          context: .
+          file: Dockerfile
           push: true
           build-args: |
             NEXT_PUBLIC_API_URL=/api
@@ -68,17 +66,17 @@ jobs:
 
       - name: Update Web production image tag
         run: |
-          sed -i "s|newTag: .*|newTag: ${{ steps.vars.outputs.image_tag }}|" gelato-web/k8s/overlays/prod/kustomization.yaml
-          git diff -- gelato-web/k8s/overlays/prod/kustomization.yaml
+          sed -i "s|newTag: .*|newTag: ${{ steps.vars.outputs.image_tag }}|" k8s/overlays/prod/kustomization.yaml
+          git diff -- k8s/overlays/prod/kustomization.yaml
 
       - name: Commit GitOps Web tag
         run: |
-          if git diff --quiet -- gelato-web/k8s/overlays/prod/kustomization.yaml; then
+          if git diff --quiet -- k8s/overlays/prod/kustomization.yaml; then
             echo "No GitOps change to commit."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add gelato-web/k8s/overlays/prod/kustomization.yaml
+          git add k8s/overlays/prod/kustomization.yaml
           git commit -m "chore(gitops): update gelato-web image to ${{ steps.vars.outputs.image_tag }}"
           git push
