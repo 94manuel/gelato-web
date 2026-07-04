@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: gelato-web
+  namespace: gelato
+  labels:
+    app.kubernetes.io/name: gelato-web
+    app.kubernetes.io/component: web
+    app.kubernetes.io/part-of: gelato-recipes-platform
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: gelato-web
+  ports:
+    - name: http
+      port: 3000
+      targetPort: 3000

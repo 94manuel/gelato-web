@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
   output: "standalone",
   transpilePackages: ["@gelato/gelato-core"],
   async rewrites() {
+    if (apiProxyTarget.startsWith("/")) return [];
     return [
       {
         source: "/api/:path*",

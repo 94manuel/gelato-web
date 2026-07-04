@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gelato-web
+  namespace: gelato
+  labels:
+    app.kubernetes.io/name: gelato-web
+    app.kubernetes.io/component: web
+    app.kubernetes.io/part-of: gelato-recipes-platform
+spec:
+  replicas: 1
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: gelato-web
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: gelato-web
+        app.kubernetes.io/component: web
+        app.kubernetes.io/part-of: gelato-recipes-platform
+    spec:
+      imagePullSecrets:
+        - name: ghcr-secret
+      containers:
+        - name: web
+          image: ghcr.io/94manuel/gelato-web:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+              name: http
+          envFrom:
+            - configMapRef:
+                name: gelato-web-config
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 3
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            timeoutSeconds: 3
+          resources:
+            requests:
+              cpu: 80m
+              memory: 192Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi

@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gelato-web
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: gelato-web
+    app.kubernetes.io/part-of: gelato-recipes-platform
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/94manuel/gelato.git
+    targetRevision: main
+    path: gelato-web/k8s/overlays/prod
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: gelato
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

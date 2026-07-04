@@ -1,15 +1,16 @@
 {
-  "name": "@gelato/web",
+  "name": "gelato-web",
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3000",
-    "build": "next build",
+    "build:core": "npm run build --prefix packages/gelato-core",
+    "dev": "npm run build:core && next dev -p 3000",
+    "build": "npm run build:core && next build",
     "start": "next start -p 3000",
     "lint": "next lint"
   },
   "dependencies": {
-    "@gelato/gelato-core": "1.0.0",
+    "@gelato/gelato-core": "file:./packages/gelato-core",
     "next": "^15.3.4",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"

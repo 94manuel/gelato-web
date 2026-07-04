@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gelato-web-config
+  namespace: gelato
+  labels:
+    app.kubernetes.io/name: gelato-web
+    app.kubernetes.io/part-of: gelato-recipes-platform
+data:
+  NODE_ENV: "production"
+  NEXT_TELEMETRY_DISABLED: "1"
+  NEXT_PUBLIC_API_URL: "/api"
